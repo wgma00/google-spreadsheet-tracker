@@ -1,0 +1,10 @@
+# path the the google credentials in order access the google api
+google_creds_path: ''
+# special key at the end of a google sheet's url
+google_sheets_key: ''
+# api key for the person running the script (only one is nedded) 
+torn_api_key: ''
+# people who will be tracked on the google sheets
+user_ids: - '' 
+# this will be populated by the script itself, so leave empty when
+userbase: ''
