@@ -21,72 +21,46 @@
 # SOFTWARE.
 
 import gspread
-import requests
-import json
 import yaml
-import time
 from oauth2client.service_account import ServiceAccountCredentials
 
 
-class Database(object):
+class SpreadSheetTracker(object):
+    """ Handles getting user data and uploading to a google spreadsheet.
+
+    Uses the google sheets api to access and upload data.
+
+    Attributes:
+        details: map, maps variables to sensitive information.
+        torn_api_key: string, api key provided by torn.
+        google_creds_path: string, path to the credentials i.e. "*.json".
+        google_sheets_key: string, code given to a google spreadsheet.
+        wks: worksheet object, object representing the online spreadsheet.
+    """
     def __init__(self):
-        '''(Database) -> None'''
+        """Initializes basic contents required to access the service."""
         with open("details.yaml", 'r') as yaml_file:
            self.details = yaml.load(yaml_file)
-           self.torn_api_key = str(self.details['torn_api_key'])
            self.google_creds_path = str(self.details['google_creds_path'])
            self.google_sheets_key = str(self.details['google_sheets_key'])
-           self.user_ids = self.details['user_ids']
-           self.userbase = self.details['userbase'] if self.details['userbase'] != None else {user:{} for user in self.user_ids}
-           self.updateDatabase()
            self.wks = None
            self.googleSpreadSheetSetup()
-           self.uploadToSpreadSheet()
+           self.modifySpreadSheet()
 
     def googleSpreadSheetSetup(self):
-        '''(Database)->None
-            Opens the spread sheet at the specified key 
-        '''
+        """Authenticates user into google services and accesses spreadsheet."""
         self.scope = ['https://spreadsheets.google.com/feeds']
         self.credentials = ServiceAccountCredentials.from_json_keyfile_name(self.google_creds_path, self.scope)
         self.gc = gspread.authorize(self.credentials)
         self.wks = self.gc.open_by_key(self.google_sheets_key).sheet1
 
-    def uploadToSpreadSheet(self):
-        '''(Database) -> None
-            Here we will upload all the information gained from the torn api
-            into a google spreadsheet
-        '''
+    def modifySpreadSheet(self):
+        """Modifies spreadsheet"""
+        # please refer to https://github.com/burnash/gspread for api details
+        # related to modifying spreadsheets
         pass
-        # days_in_month = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
-        # month = int(time.strftime("%d/%m/%Y").split('/')[1])-1
-        # top_row = ['Users'] + ['Day: ' + str(i) for i in range(1, days_in_month[month]+1)]
-        # print(top_row)
-        # for i in range(len(top_row)):
-        #     self.wks.update_acell('A'+str(i+1), top_row[i])
-
-        # for user in range(len(self.user_ids)):
-        #     self.wks.update_acell( chr(ord('B')+i)+'1', self.user_ids[user])
-        #     # for day in range(1, days_in_month[month]+1):
-        #     #     if self.userbase[user][day] == None:
-        #     #         self.wks.update_acell(chr(ord('B')+user)+str(day), userbase[user][day]['xantaken'])
-
-
-    def updateDatabase(self):
-        '''(Database) -> None
-           Updates user information with the most recent information, should be
-           done daily
-        '''
-        date = time.strftime("%d/%m/%Y").split('/')[0]
-        for user in self.userbase:
-            r = requests.request("GET", "https://api.torn.com/user/"+user+"?selections=personalstats&key="+self.torn_api_key)
-            data = r.json()
-            self.userbase[user][date] = data
-        # write the changes to file
-        self.details['userbase'] = self.userbase 
-        with open('details.yaml', 'w') as outfile:
-            outfile.write( yaml.dump(self.details, default_flow_style=False))
 
 
 if __name__ == '__main__':
-    d = Database()
+    sst = SpreadSheetTracker()
+

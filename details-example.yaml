@@ -1,10 +1,11 @@
-# path the the google credentials in order access the google api
+# Please note, that in order to have this work you will also have to send an
+# invite from the google spreadsheet itself to the associated email that is
+# given through google development apis services.
+# example: data-tracker@torn-tracker.iam.gserviceaccount.com
+
+# This will be the path name to the *.json that google has provided you.
+# examples: 'torn-tracker-39d3ed6daeca.json'
 google_creds_path: ''
-# special key at the end of a google sheet's url
+# This will be the link to the spreadsheet you wish to access.
+# examples: 1u2jBkc35RWMYqCwXYRcHpgJGnSbgfRkjpbgYZYVsVbg
 google_sheets_key: ''
-# api key for the person running the script (only one is nedded) 
-torn_api_key: ''
-# people who will be tracked on the google sheets
-user_ids: - '' 
-# this will be populated by the script itself, so leave empty when
-userbase: ''
