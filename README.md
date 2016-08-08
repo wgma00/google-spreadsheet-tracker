@@ -14,4 +14,4 @@ This software is intended to track a google spreadsheet
 # Lisence
 
 This is distributed under the terms of the [MIT License][1].
-   [1]: https://github.com/wgma00/google-spreadsheet-tracker/blob/master/LICENCE    
+   [1]: https://github.com/wgma00/google-spreadsheet-tracker/blob/master/LICENSE 
